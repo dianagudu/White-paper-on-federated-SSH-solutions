@@ -7,9 +7,9 @@ Problem Description
 
 Researchers sometimes want to access services over SSH. These services belong to an organization that does not necessarily have a (direct) relationship with that particular researcher, i.e. there is no trusted path for the researcher to tell the organization about their public SSH key. So "Federated SSH" aims at solving this problem, which consists of a number of parts:
 
-1.  How to teach the SSH server which users (with matching SSH public key) to accept?
-2.  How to inform the researchers what the server's/servers' SSH host key(s) is/are, to avoid relying on "Trust On First Use" (TOFU)?
-3.  How to _revoke_ access for a particular user if they are no longer a researcher in good standing, left the project, or left their institute?
+1. How to teach the SSH server which users (with matching SSH public key) to accept?
+2. How to inform the researchers what the server's/servers' SSH host key(s) is/are, to avoid relying on "Trust On First Use" (TOFU)?
+3. How to _revoke_ access for a particular user if they are no longer a researcher in good standing, left the project, or left their institute?
 
 Why
 ===
@@ -27,9 +27,9 @@ In this white paper we present different solutions that could be used to leverag
 Introduction into 'Web SSO'
 ===========================
 
-*   federated login and SAML login as we use it in eduGAIN / national fed
-*   explain context of why using fed login or user management
-*   explain context about aarc BPA model
+* federated login and SAML login as we use it in eduGAIN / national fed
+* explain context of why using fed login or user management
+* explain context about aarc BPA model
 
 Comparison chart
 ================
@@ -60,11 +60,11 @@ In general, certificates makes it possible for a SSH server to trust users from 
 
 In addition the the public key a certificate contains:
 
-1.  Identity information of the user (KeyId)
-2.  Identity/role/hostname information (ValidPrincipals)
-3.  Validity period information (ValidAfter, ValidAfter)
-4.  Critical Options – information that can't be ignored by a SSH server
-5.  Extensions – general extension information
+1. Identity information of the user (KeyId)
+2. Identity/role/hostname information (ValidPrincipals)
+3. Validity period information (ValidAfter, ValidAfter)
+4. Critical Options – information that can't be ignored by a SSH server
+5. Extensions – general extension information
 
 This means that the certificate can be used as holder of key token by a ssh server i.e. the additional information can be used to make authorization decisions on the SSH server.
 
@@ -89,14 +89,14 @@ Ssh servers that trust one or more ssh certificate authority's are then able to
 
 The method the Deic SSH certificate authority uses for issuing certificates is as follows:
 
-1.  The certificate authority is a SAML service provider that, when it receives an SAML assertion saves it temporarily under a random name
-2.  The name is made available to the user as a parameter of a ssh command string that the user can copy from the certificate authority's webpage and paste in a terminal
-3.  The ssh command connects to the SSH certificate authority process on a port where it listens for ssh connections
-4.  The SSH certificate authority now has access to the users public key - as part of the ssh authentication protocol it is made available to the ssh server
-5.  A successful check of the signature of the ssh session\_key with the public key proves that the user is in possession of the corresponding private key
-6.  The SSH certificate authority also has access to the SAML assertion, as the random name was sent as a parameter in the ssh connection
-7.  It can then create a ssh certificate using the user's public key, the available information and it's policy for for eg. the validity time for the certificate and potentially a schema for mapping the user's SAML identity to a unix username
-8.  The issued certificate is sent back to the client via the ssh connection to the ssh CA and saved where ssh expects to find it.
+1. The certificate authority is a SAML service provider that, when it receives an SAML assertion saves it temporarily under a random name
+2. The name is made available to the user as a parameter of a ssh command string that the user can copy from the certificate authority's webpage and paste in a terminal
+3. The ssh command connects to the SSH certificate authority process on a port where it listens for ssh connections
+4. The SSH certificate authority now has access to the users public key - as part of the ssh authentication protocol it is made available to the ssh server
+5. A successful check of the signature of the ssh session\_key with the public key proves that the user is in possession of the corresponding private key
+6. The SSH certificate authority also has access to the SAML assertion, as the random name was sent as a parameter in the ssh connection
+7. It can then create a ssh certificate using the user's public key, the available information and it's policy for for eg. the validity time for the certificate and potentially a schema for mapping the user's SAML identity to a unix username
+8. The issued certificate is sent back to the client via the ssh connection to the ssh CA and saved where ssh expects to find it.
 
 As long as the certificate is valid it can then be used as the users public key. The user will not experience any difference and can continue to use ssh - both interactively and in the background.
 
@@ -142,26 +142,26 @@ The principals system is used in very large deployments where where there is onl
 
 ### Discussion of Evaluation Criteria
 
-*   Does the solution mitigate sharing of SSH keys?
-    *   Even if a private key is “shared” or stolen login requires a “recent” certificate based on a federated login. I.e. it requires something based an a persons institutional identity, which we doubt will be “shared”
-*   What are the client requirements and supported platforms?
-    *   An openSSH ssh client
-*   What are the SSH server requirements and does the solution require additional software beyond SSH server?
-    *   An openSSH ssh server (ssh). No
-*   Does the solution allow for non interactive client logins?
-    *   Yes - in this context a certificate is just a time limited public key. Also works with subsystems like sftp and scp"
-*   Does the solution allow for delegation?
-    *   Yes, standard ssh delegation
-*   What requirements are put on the incoming federated identity?
-    *   None - but some form for username coordination is needed if multiple certificate authorities are trusted
-*   How is provisioning towards the SSH server set up?
-    *   Depends on the situation, but a certificate can contain information to do front end ad-hoc creation of users. We have a working prototype for that.
-*   How does revocation work?
-    *   Just use a short validity time for the certificate.
-*   Does the setup allow for MFA
-    *   Apart from the obvious mfa from the federated login, the private ssh key can be mfa’ed.
-*   Any provisions for mitigating server TOFU
-    *   Yes, use host certificates. This is possible independent of the solution for users.
+* Does the solution mitigate sharing of SSH keys?
+  * Even if a private key is “shared” or stolen login requires a “recent” certificate based on a federated login. I.e. it requires something based an a persons institutional identity, which we doubt will be “shared”
+* What are the client requirements and supported platforms?
+  * An openSSH ssh client
+* What are the SSH server requirements and does the solution require additional software beyond SSH server?
+  * An openSSH ssh server (ssh). No
+* Does the solution allow for non interactive client logins?
+  * Yes - in this context a certificate is just a time limited public key. Also works with subsystems like sftp and scp"
+* Does the solution allow for delegation?
+  * Yes, standard ssh delegation
+* What requirements are put on the incoming federated identity?
+  * None - but some form for username coordination is needed if multiple certificate authorities are trusted
+* How is provisioning towards the SSH server set up?
+  * Depends on the situation, but a certificate can contain information to do front end ad-hoc creation of users. We have a working prototype for that.
+* How does revocation work?
+  * Just use a short validity time for the certificate.
+* Does the setup allow for MFA
+  * Apart from the obvious mfa from the federated login, the private ssh key can be mfa’ed.
+* Any provisions for mitigating server TOFU
+  * Yes, use host certificates. This is possible independent of the solution for users.
 
 PAM-weblogin
 ------------
@@ -190,6 +190,9 @@ The idea is to authenticate users based on the preprovisioned username and publi
 * Does the setup allow for MFA?
   * Yes, e.g. as a step-up requirement of the federative login flow.
 
+
+The KIT "SSH access with OIDC tokens" solution
+----------------------------------------------
 
 Appendix
 ======================================
